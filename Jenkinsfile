@@ -11,7 +11,7 @@ environment{
  stages {
  stage('Git Checkout') {
  steps {
- git branch: 'main', url: 'https://github.com/Muruganv07/Ekart.git'
+ git branch: 'main', url: 'https://github.com/sharath005/Ekarttest.git'
  }
  }
  stage('Complile'){
@@ -23,34 +23,9 @@ environment{
  steps{
  sh ''' $SCANNER_HOME/bin/sonar-scanner -
 Dsonar.url=http://13.201.80.6:9000/ -
-Dsonar.login=squ_28fc0183e6afadc91e43e4673c3c7568699ddd19 -
-Dsonar.projectName=Ekart \
+Dsonar.login=squ_6449b6d4f427a75c224bfd63361e7cc8ffc73034 -
+Dsonar.projectName=Ekartest \
  -Dsonar.java.binaries=. \
- -Dsonar.projectKey=Ekart '''
+ -Dsonar.projectKey=Ekartest '''
  }
  }
- stage('Build'){
- steps{
- sh "mvn clean install -DskipTests=true"
- }
- }
- stage('Docker Build & Push') {
- steps {
- script{
- withDockerRegistry(credentialsId: '11611aa2-590c-48a9-b4bf3d4437711e68', toolName: 'docker') {
- 
- sh "docker build -t shopping-cart -f docker/Dockerfile ."
- sh "docker tag shopping-cart murugan1502/shopping-cart:latest"
- sh "docker push murugan1502/shopping-cart:latest"
- }
- }
- }
- }
- stage('Trigger'){
- steps{
- build job: "CD", wait: true
- }
- }
- 
- }
-}
